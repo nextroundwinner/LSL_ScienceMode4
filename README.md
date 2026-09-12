@@ -1,4 +1,4 @@
-# ScienceMode4Python_LSL
+# LSL_ScienceMode4
 
 A bridge between [Hasomed ScienceMode 4](https://science.hasomed.de/) stimulation/measurement devices and [Lab Streaming Layer (LSL)](https://labstreaminglayer.org/), allowing experiment-control software such as [PsychoPy](https://www.psychopy.org/) to trigger electrical stimulation and receive measurement data over the network in real time.
 
