@@ -41,11 +41,12 @@ class P24Device(ScienceModeDevice):
 
 
     async def get_measurement_data(self) -> list[float] | None:
-        ack = self._layer.packet_buffer.get_packet_from_buffer()
-        if ack:
-            if ack.command == sm4.Commands.LOW_LEVEL_CHANNEL_CONFIG_ACK:
-                ll_config_ack: sm4.PacketLowLevelChannelConfigAck = ack
-                return ll_config_ack.measurement_samples
+        if self._measurement_active:
+            ack = self._layer.packet_buffer.get_packet_from_buffer()
+            if ack:
+                if ack.command == sm4.Commands.LOW_LEVEL_CHANNEL_CONFIG_ACK:
+                    ll_config_ack: sm4.PacketLowLevelChannelConfigAck = ack
+                    return ll_config_ack.measurement_samples
 
         return None
 
@@ -55,8 +56,6 @@ class P24Device(ScienceModeDevice):
 
 
     async def _start(self) -> None:
-        await super()._start()
-
         await self._device.initialize()
         try:
             # sometime activating high voltage may cause a communication interrupt
@@ -64,6 +63,8 @@ class P24Device(ScienceModeDevice):
                                    sm4.LowLevelHighVoltageSource.STANDARD)
         except Exception as e:
             print(e)
+
+        await super()._start()
 
 
     async def _stop(self) -> None:

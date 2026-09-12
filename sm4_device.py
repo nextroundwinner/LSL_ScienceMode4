@@ -40,6 +40,8 @@ class ScienceModeDevice:
             await self._stop()
             return True
 
+        return False
+
 
     async def get_measurement_data(self) -> list[float] | None:
         """Get measurement data"""

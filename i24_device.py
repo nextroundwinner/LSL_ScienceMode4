@@ -16,18 +16,24 @@ class I24Device(ScienceModeDevice):
 
 
     async def get_measurement_data(self) -> list[float] | None:
-        ack = self._layer.packet_buffer.get_packet_from_buffer()
-        if ack:
-            if ack.command == sm4.Commands.DL_SEND_LIVE_DATA:
-                sld: sm4.PacketDyscomSendLiveData = ack
-                return [sld.samples[0].value]
+        if self._measurement_active:
+            data: list[float] = []
+            while True:
+                # collect all available packages
+                ack = self._layer.packet_buffer.get_packet_from_buffer()
+                if ack:
+                    if ack.command == sm4.Commands.DL_SEND_LIVE_DATA:
+                        sld: sm4.PacketDyscomSendLiveData = ack
+                        data.append(sld.samples[0].value)
+                else:
+                    break
+
+            return None if len(data) == 0 else data
 
         return None
 
 
     async def _start(self) -> None:
-        await super()._start()
-
         # call enable measurement power module for measurement
         await self._layer.power_module(sm4.DyscomPowerModuleType.MEASUREMENT, 
                                        sm4.DyscomPowerModulePowerType.SWITCH_ON)
@@ -40,6 +46,8 @@ class I24Device(ScienceModeDevice):
 
         # start dyscom measurement
         await self._layer.start()
+
+        await super()._start()
 
 
     async def _stop(self) -> None:

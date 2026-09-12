@@ -47,7 +47,7 @@ async def main() -> None:
         channel_count=1,
         nominal_srate=0,              # irregular: pulses aren't clocked at a fixed rate
         channel_format="float32",
-        source_id="P24-current",
+        source_id="ScienceMode-measurement",
     )
     outlet = StreamOutlet(info)
 
@@ -79,6 +79,7 @@ async def main() -> None:
         data = await device.get_measurement_data()
         if data is not None:
             outlet.push_chunk(data)
+            await asyncio.sleep(0)
         else:
             await asyncio.sleep(0.01)
 
