@@ -36,7 +36,16 @@ Example:
 python science_mode_lsl.py --sciencemode_device P24 --sciencemode_device_port COM3
 ```
 
-## Interfacing with PsychoPy
+## Setup
+
+```bash
+pip install -r requirements.txt
+```
+
+Dependencies: [`pylsl`](https://pypi.org/project/pylsl/) and [`science_mode_4`](https://pypi.org/project/science-mode-4/).
+
+
+## Example interfacing with PsychoPy
 
 PsychoPy is not aware of the ScienceMode device or protocol at all — it only ever talks LSL, using the [`pylsl`](https://pypi.org/project/pylsl/) package (bundled with recent PsychoPy versions, or installable separately). The included [psychopy_example.psyexp](psychopy_example.psyexp) experiment shows the pattern:
 
@@ -73,14 +82,6 @@ PsychoPy is not aware of the ScienceMode device or protocol at all — it only e
 3. Optionally, a PsychoPy component can create a matching `StreamInlet` for `ScienceMode-Measurement-Data` to record incoming stimulation/measurement samples alongside the rest of the experiment data.
 
 Because the coupling is entirely through LSL, PsychoPy and `science_mode_lsl.py` can run as separate processes — even on separate machines on the same network — and any other LSL-capable tool (e.g. LabRecorder, or a custom LSL client) can observe the same streams for synchronized recording.
-
-## Setup
-
-```bash
-pip install -r requirements.txt
-```
-
-Dependencies: [`pylsl`](https://pypi.org/project/pylsl/) and [`science_mode_4`](https://pypi.org/project/science-mode-4/).
 
 
 ## PsychoPy example
